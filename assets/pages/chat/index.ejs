@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+    <title>Scarlat app</title>
+    <link rel="stylesheet" href="/style.css">
+</head>
+
+<body>
+
+    <div class="col-4 border-right px-3 bg-light">
+        <p class="h5 mb-0 py-3">Recente</p>
+        <div class="bg-gray px-4 py-3 bg-light">
+            <% for (let i = 0; i < protocolos.length; i++) { %>
+            <a href="/chat/<%=protocolos[i].PROTOCOLO_ID%>/<%=protocolos[i].NUMERO%>/<%=protocolos[i].NOME%>"
+                class="list-group-item list-group-item-action list-group-item-light rounded-0 border border-dark =">
+                <div class="media"><img src="data:image/png;charset=utf-8;base64,<%=protocolos[i].FOTOPERFIL%>"
+                        alt="user" width="50" class="rounded-circle">
+                    <div class="media-body ml-4">
+                        <div class="d-flex align-items-center justify-content-between mb-1">
+                            <h6 class="mb-0"><%=protocolos[i].NOME%></h6>
+                            <small class="small font-weight-bold"><%=protocolos[i].ULTIMO_CONTATO%></small>
+                        </div>
+                        <div class="d-flex align-items-center justify-content-between mb-1">
+                            <p class="font-italic mb-0 text-small"><%=protocolos[i].ULTIMA_MENSAGEM%></p>
+                            <div class="circle">
+                                <span class="number"><%=protocolos[i].NAO_LIDAS%></span>
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+            </a>
+            <%} %>
+            <!-- <a class="list-group-item list-group-item-action active text-white rounded-0 border border-dark">
+                <div class="media"><img src="https://bootstrapious.com/i/snippets/sn-chat/avatar.svg" alt="user"
+                        width="50" class="rounded-circle">
+                    <div class="media-body ml-4">
+                        <div class="d-flex align-items-center justify-content-between mb-1">
+                            <h6 class="mb-0">teste</h6>
+                            <small class="small font-weight-bold">teste</small>
+                        </div>
+                        <div class="d-flex align-items-center justify-content-between mb-1">
+                            <p class="font-italic mb-0 text-small">teste</p>
+                            <div class="circle">
+                                <span class="number">1</span>
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+            </a> -->
+            <!-- <a href=""
+                class="list-group-item list-group-item-action list-group-item-light rounded-0 border border-dark ">
+                <div class="media"><img src="https://bootstrapious.com/i/snippets/sn-chat/avatar.svg" alt="user"
+                        width="50" class="rounded-circle">
+                    <div class="media-body ml-4">
+                        <div class="d-flex align-items-center justify-content-between mb-1">
+                            <h6 class="mb-0">teste</h6><small class="small font-weight-bold">data</small>
+                        </div>
+                        <p class="font-italic mb-0 text-small">ultima</p>
+                    </div>
+                </div>
+            </a> -->
+        </div>
+    </div>
+    <section class="chat__section">
+        <div class="brand">
+            <img height="30" src="/icon.ico" alt="">
+            <h1>Scarlat</h1>
+        </div>
+        <div class="message__area">
+            <% for (let i = 0; i < protocolo.length; i++) { %>
+            <% if (protocolo[i].USUARIO == "U") { %>
+            <div class="incoming message">
+                <h4>USUARIO</h4>
+                <p><%= protocolo[i].MENSAGEM %></p>
+            </div>
+            <% } else { %>
+            <div class="outgoing message">
+                <h4>Scarlat</h4>
+                <p><%= protocolo[i].MENSAGEM %></p>
+            </div>
+            <% } %>
+            <%} %>
+        </div>
+        <div>
+            <div class="border">
+                <textarea id="textarea" cols="30" rows="1" placeholder="Digite a mensagem..."></textarea>
+            </div>
+
+            <div class="input-group col-15 py-3 px-3">
+                <input type="text" id="numero" placeholder="Número de telefone" class="form-control">
+                <div class="col-5">
+                    <input type="text" id="mensagem" placeholder="Mensagem" class="form-control">
+                </div>
+                <div class="button col-3">
+                    <button type="button" onclick="sendNumber()" class="btn btn-secondary">Enviar</button>
+                </div>
+            </div>
+
+
+        </div>
+    </section>
+    <script src="/socket.io/socket.io.js"></script>
+    <script src="/client.js"></script>
+</body>
+
+</html>
