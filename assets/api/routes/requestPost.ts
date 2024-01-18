@@ -3,22 +3,18 @@ import express, {
     Request,
     Response
 } from 'express';
+import {
+    updateNotReads,
+    sendAPI,
+    updateConversation,
+    createConversationId
+} from '../utils/utilsPost';
 import bodyParser from 'body-parser';
-import multer from 'multer';
-import cli from 'nodemon/lib/cli';
-const client = require("../../modules/Client/client")
+
+    
 
 
 
-let cachedClient: any = null;
-let cachedDb: any = null;
-let entradaCount: number = 0;
-const MAX_ENTRADAS: number = 10;
-const upload = multer({
-    limits: {
-        fileSize: 10 * 1024 * 1024,
-    },
-});
 
 
 const router: Router = express.Router();
@@ -29,31 +25,15 @@ router.use(bodyParser.json({
 
 
 router.patch('/readMessage', updateNotReads);
-router.post('/sendMessage', client.sendAPI);
+router.post('/sendMessage', sendAPI);
+router.post('/createConversation', createConversationId);
+router.put('/updateConversation', updateConversation)
 
- async function updateNotReads(req : Request, res : Response) {
-    let conversationId = req.body.conversationId;
-    try {
-        const db = await obterCliente();
-        const collection = db.collection('MENSAGENS');
-        await collection.updateMany({
-            conversationId: conversationId,
-            read: "false"
-        }, {
-            $set: {
-                read: "true"
-            }
-        });
-        res.status(200).json({
-            "status": "sucess"
-        })
-    } catch (error) {
-        console.error("error updateNotReads",error);
-        res.status(400).json({
-            "status": "error"
-        })
-    }
-}
+
+
+
+// router.post('/sendFileBase64', sendFileBase64);
+
 
 
 
@@ -63,7 +43,6 @@ router.post('/sendMessage', client.sendAPI);
 
 
 // router.post('/sendOptions', enviarOpcoes);
-// router.post('/sendFileBase64', sendFileBase64);
 
 
 
@@ -162,42 +141,6 @@ router.post('/sendMessage', client.sendAPI);
 //     }
 // }
 
-// async function sendFileBase64(req, res) {
-//     try {
-//         const {
-//             telnumber,
-//             token,
-//             nomearquivo
-//         } = req.headers;
-//         const {
-//             base64
-//         } = req.body;
-//         let decoded;
-
-//         if (token.toString() == "sC@rl1T") {
-//             decoded = true;
-//         } else {
-//             decoded = await verificarToken(token);
-//         }
-
-//         if (decoded) {
-//             console.log("Base64");
-//             console.log(base64);
-//             console.log(telnumber);
-//             let retorno = await clientInstance.client.sendFile(telnumber + "@c.us", base64, nomearquivo);
-
-//             console.log(retorno);
-//             res.json(retorno);
-//         } else {
-//             res.status(401).send({
-//                 status: "erro",
-//                 mensagem: "Token inválido"
-//             });
-//         }
-//     } catch (error) {
-//         res.send(error);
-//     }
-// }
 
 // async function enviarOpcoes(req, res) {
 //     try {
@@ -271,26 +214,17 @@ router.post('/sendMessage', client.sendAPI);
 // }
 
 
-function formatarNumero(numero: string) {
-    // Remova o prefixo '55' e aplique a máscara de formatação desejada
-    const numeroSemPrefixo = numero.replace(/^55/, '').replace("@c.us", "");
+// function formatarNumero(numero: string) {
+//     // Remova o prefixo '55' e aplique a máscara de formatação desejada
+//     const numeroSemPrefixo = numero.replace(/^55/, '').replace("@c.us", "");
 
-    // Formatação do número para o estilo (XX) XXXXX-XXXX
-    const ddd = numeroSemPrefixo.substring(0, 2);
-    const primeiraParte = numeroSemPrefixo.substring(2, 7);
-    const segundaParte = numeroSemPrefixo.substring(7);
+//     // Formatação do número para o estilo (XX) XXXXX-XXXX
+//     const ddd = numeroSemPrefixo.substring(0, 2);
+//     const primeiraParte = numeroSemPrefixo.substring(2, 7);
+//     const segundaParte = numeroSemPrefixo.substring(7);
 
-    return `(${ddd}) ${primeiraParte}-${segundaParte}`;
-}
-
-async function obterCliente() {
-    if (!cachedClient || !cachedDb) {
-        cachedClient = await obterCliente();
-        cachedDb = cachedClient.db('ScarlatDataBase');
-    }
-    return cachedDb;
-}
-
+//     return `(${ddd}) ${primeiraParte}-${segundaParte}`;
+// }
 // async function obterDadosProtocolos(status) {
 //     let retorno = [];
 //     const client = await obterCliente();

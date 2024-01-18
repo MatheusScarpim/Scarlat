@@ -1,8 +1,29 @@
-import express, { Request, Response } from 'express';
+import express, {
+    Request,
+    Response
+} from 'express';
 import bodyParser from 'body-parser';
+
+
 const meuEmitter = require('../../../Events/Emitter');
 
+
+const utils = require('../utils/utils');
+
+let token = process.env.TOKEN_META;
+
 const router = express.Router();
+
+let options : any = {
+    year: 'numeric',
+    month: '2-digit',
+    day: '2-digit',
+    hour: '2-digit',
+    minute: '2-digit',
+    second: '2-digit',
+    hour12: false,
+    timeZone: 'America/Sao_Paulo'
+};
 
 router.use(express.json());
 router.use(express.urlencoded({
@@ -15,27 +36,26 @@ router.get('/webhook', (req: Request, res: Response) => {
     res.status(200).send(query["hub.challenge"]);
 });
 
-router.post('/webhook', (req: Request, res: Response) => {
+router.post('/webhook', async (req: Request, res: Response) => {
     const body: any = req.body;
+
 
     if (body.entry && body.entry[0].changes && body.entry[0].changes[0].value.messages) {
         const entry = body.entry[0].changes[0].value.messages[0];
-
         if (entry) {
             let numero = entry.from;
             let name = body.entry[0].changes[0].value.contacts[0].profile.name;
-            let dados : {event : string, from : string, message : string, name : string , provider: string} | null = null;
+            const dataHora = new Date(entry.timestamp * 1000);
 
-            if (entry.text) {
-                let entryText = entry.text.body;
-                dados = {
-                    event: "text",
-                    from: numero,
-                    message: entryText,
-                    name: name,
-                    provider: "whats_meta"
-                };
-            }
+
+            let dados = {
+                type: entry.type,
+                identifier: numero,
+                message: await utils.getType(entry),
+                name: name,
+                provider: "whats_meta",
+            };
+
 
             if (dados) {
                 meuEmitter.emit('message', dados);
@@ -96,5 +116,5 @@ router.post('/webhook', (req: Request, res: Response) => {
 //     res.sendStatus(200);
 // });
 
-export default router;
 
+export default router;

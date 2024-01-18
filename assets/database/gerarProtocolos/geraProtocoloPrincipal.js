@@ -1,27 +1,7 @@
 const criarConexao = require('../BancoDeDados.js');
 const moment = require('moment-timezone');
-// const clientInstance = require('../../../../server.js');
 const axios = require('axios');
 
-let cachedClient = null;
-let cachedDb = null;
-let entradaCount = 0;
-const MAX_ENTRADAS = 10; // Defina o número máximo de entradas antes de fechar e reabrir a conexão
-
-async function obterCliente() {
-    console.log(entradaCount);
-    try {
-        if (!cachedClient || !cachedClient.db) {
-            console.warn("Cliente não está conectado, tentando reconectar...");
-            cachedClient = await criarConexao.Client();
-            cachedDb = cachedClient.db('ScarlatDataBase');
-        }
-        return cachedDb;
-    } catch (error) {
-        console.error("Erro ao obter cliente:", error);
-        throw error;
-    }
-}
 
 
 

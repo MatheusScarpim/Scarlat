@@ -1,5 +1,0 @@
-username
-password
-
-
-username   crypt = hmac256
