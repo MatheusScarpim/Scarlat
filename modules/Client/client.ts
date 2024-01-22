@@ -1,6 +1,6 @@
 const ScarlatMetaWhats = require("../Packages/meta_modules/ScarlatMetaWhats/Requisicoes/API");
 const ScarlatWhatsWpp = require("../Packages/wpp_modules/ScarlatWpp/Sistema/sistema")
-const ScarlatTelegrama = require("../Packages/telegram_modules/ScarlatTelegram/Sistema/sistema")
+// const ScarlatTelegrama = require("../Packages/telegram_modules/ScarlatTelegram/Sistema/sistema")
 const utilsAll = require("../Packages/utils/utilsAll")
 
 
@@ -10,7 +10,7 @@ function getClient(provider: string) {
     } else if (provider == "whats_meta") {
         return ScarlatMetaWhats.client;
     } else if (provider == "telegram") {
-        return ScarlatTelegrama.bot.telegram;
+        // return ScarlatTelegrama.bot.telegram;
     } else {
         return;
     }
