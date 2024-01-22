@@ -1,6 +1,5 @@
 const wpp = require('@wppconnect-team/wppconnect');
 const meuEmitter = require("../../../../Events/Emitter");
-const path = require('path');
 const {
     getType
 } = require('../utils/utils');
@@ -8,11 +7,6 @@ const {
 wpp.create({
         session: 'Scarlat',
         headless: true,
-        puppeteerOptions: {},
-        disableWelcome: false,
-        autoClose: 60000,
-        tokenStore: 'file',
-        folderNameToken: './tokens',
     })
     .then((client) => start(client))
     .catch((error) => console.log(error));
@@ -21,7 +15,6 @@ function start(client) {
     module.exports.client = client
     client.onMessage(async (message) => {
         if (!message.isGroupMsg) {
-            const dataHora = new Date(message.timestamp * 1000);
 
             let arrumarbody = {
                 identifier: message.from.replace("@c.us", ""),
@@ -34,8 +27,5 @@ function start(client) {
         }
 
 
-    });
-    client.onIncomingCall((callback) => {
-        console.log(callback)
     });
 }
