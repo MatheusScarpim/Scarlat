@@ -33,9 +33,9 @@ async function dispararProtocolos() {
     //     });
 }
 
-setInterval(() => {
-    dispararProtocolos()
-}, 5000);
+// setInterval(() => {
+//     dispararProtocolos()
+// }, 5000);
 
 
 async function obterDadosProtocolos() {
