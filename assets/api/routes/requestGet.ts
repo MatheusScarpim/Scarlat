@@ -1,8 +1,15 @@
-import express, { Request, Response, Router } from 'express';
+import express, {
+    Request,
+    Response,
+    Router
+} from 'express';
 import bodyParser from 'body-parser';
 const meuEmitter = require("../../../modules/Events/Emitter")
 
-import {getMessagesId} from '../utils/utilsGet';
+import {
+    getMessagesId,
+    obterDadosProtocolos
+} from '../utils/utilsGet';
 
 const router = express.Router();
 
@@ -16,6 +23,9 @@ router.post('/protocolos', retornaWebhookProtocolos);
 
 router.get('/getMessages', getMessagesId);
 
+router.get('/getConversations', obterDadosProtocolos);
+
+
 function retornaWebhook(req: Request, res: Response): void {
     // For example: res.status(200).json({ message: 'Webhook received successfully' });
 }
@@ -23,5 +33,7 @@ function retornaWebhook(req: Request, res: Response): void {
 function retornaWebhookProtocolos(req: Request, res: Response): void {
     meuEmitter.meuEmitter.emit("protocolos", req.body);
 }
+
+
 
 export default router;

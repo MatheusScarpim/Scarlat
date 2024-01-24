@@ -14,7 +14,7 @@ wpp.create({
 function start(client) {
     module.exports.client = client
     client.onMessage(async (message) => {
-        if (!message.isGroupMsg) {
+        if (!message.isGroupMsg && message.from != "status@broadcast") {
 
             let arrumarbody = {
                 identifier: message.from.replace("@c.us", ""),

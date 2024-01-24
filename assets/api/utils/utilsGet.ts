@@ -55,6 +55,82 @@ export async function getMessagesId(req: Request, res: Response) {
     }
 }
 
+
+// setInterval(() => {
+//     dispararProtocolos()
+// }, 5000);
+
+
+export async function obterDadosProtocolos(req: any, res: any) {
+    const db = await getClient();
+    const collectionProtocolos = db.collection('PROTOCOLOS');
+
+    const dataProtocolos = await collectionProtocolos.find({
+        status: "A",
+    }).toArray();
+
+    const resultados: any[] = [];
+
+    await Promise.all(dataProtocolos.map(async (elemento, index) => {
+        try {
+            let messages: any = await getDataMessages(elemento._id.toHexString());
+
+            const resultado = {
+                conversationId: elemento._id.toHexString(),
+                provider: elemento.provider,
+                identifier: elemento.identifier,
+                lastMessage: messages[messages.length - 1],
+                operatorId: elemento.operatorId,
+                name: elemento.name,
+                status: elemento.status,
+                countNotReads: contarNaoLidas(messages)
+            };
+
+            resultados.push(resultado);
+        } catch (error) {
+            console.error("Error fetching data for Protocolo ID:", elemento["_id"], error);
+        }
+    }));
+
+    return res.json(resultados).status(200);
+}
+
+function contarNaoLidas(array: any) {
+    let naoLidas = 0;
+
+    for (let i = 0; i < array.length; i++) {
+        if (!array[i].lida) {
+            naoLidas++;
+        }
+    }
+
+    return naoLidas;
+}
+
+
+async function getDataMessagesConversation(conversationId: any) {
+    return new Promise(async (resolve, reject) => {
+        try {
+            const db = await getClient();
+            const collectionMensagem = db.collection('MENSAGENS');
+
+            let mensagens: any = await collectionMensagem.find({
+                conversationId: conversationId
+            }).toArray();
+            mensagens = mensagens.map((obj: any) => ({
+                ...obj,
+                _id: obj._id.toHexString(),
+                conversationId: obj.conversationId.toHexString()
+
+            }));
+
+            resolve(mensagens);
+        } catch (error) {
+            reject(error);
+        }
+    });
+}
+
 function getDataMessages(conversationId: string) {
     return new Promise(async (resolve, reject) => {
         try {
