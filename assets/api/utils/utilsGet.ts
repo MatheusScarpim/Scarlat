@@ -99,7 +99,7 @@ function contarNaoLidas(array: any) {
     let naoLidas = 0;
 
     for (let i = 0; i < array.length; i++) {
-        if (!array[i].lida) {
+        if (!array[i].read) {
             naoLidas++;
         }
     }
