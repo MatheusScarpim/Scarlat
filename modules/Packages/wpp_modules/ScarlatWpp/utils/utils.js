@@ -35,6 +35,7 @@ async function getType(client, message) {
 async function getBase64Image(client) {
     return new Promise(async (resolve, reject) => {
         const Foto = await client.getProfilePicFromServer(client.from);
+        console.log(Foto)
         if (Foto.tag != null) {
             resolve(await imageUrlToBase64(Foto.imgFull))
         } else {
