@@ -87,7 +87,8 @@ export async function obterDadosProtocolos(req: any, res: any) {
                 operatorId: elemento.operatorId,
                 name: elemento.name,
                 status: elemento.status,
-                countNotReads: contarNaoLidas(messages)
+                countNotReads: contarNaoLidas(messages),
+                photo: elemento.photo || null
             };
 
             resultados.push(resultado);

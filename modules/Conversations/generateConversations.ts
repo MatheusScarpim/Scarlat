@@ -34,6 +34,7 @@ interface Message {
     read ? : boolean;
     message ? : string;
     lastMessage ? : any;
+    photo ? : any;
 }
 
 
@@ -109,7 +110,7 @@ async function addMessageUser(message: any, to: string, read: boolean): Promise 
 
         await collection.insertOne(data);
 
-        await updateName(conversationId, message.name, db)
+        await updateName(conversationId, message.name, db, message.photo)
 
 
         return {
@@ -122,14 +123,15 @@ async function addMessageUser(message: any, to: string, read: boolean): Promise 
     }
 }
 
-async function updateName(conversationId: ObjectId, name: string, db: any) {
+async function updateName(conversationId: ObjectId, name: string, db: any, photo: any) {
     const filter = {
         _id: conversationId
     };
     const collection: any = db.collection('PROTOCOLOS');
     await collection.updateMany(filter, {
         $set: {
-            name: name
+            name: name,
+            photo: photo
         }
     });
 }
@@ -162,6 +164,7 @@ async function createConversationId(message: Message): Promise < any > {
                 operatorId: message.operatorId || null,
                 status: "A",
                 provider: message.provider,
+                photo: message.photo || null
             };
 
             await collection.insertOne(data);
