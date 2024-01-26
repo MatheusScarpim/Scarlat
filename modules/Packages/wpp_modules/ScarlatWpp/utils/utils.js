@@ -1,3 +1,4 @@
+const { Client } = require("socket.io/dist/client");
 const utilsAll = require("../../../utils/utilsAll")
 
 
@@ -34,6 +35,7 @@ async function getType(client, message) {
 
 async function getBase64Image(client) {
     return new Promise(async (resolve, reject) => {
+        console.log(client)
         const Foto = await client.getProfilePicFromServer(client.from);
         console.log(Foto)
         if (Foto.tag != null) {
