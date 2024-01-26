@@ -17,9 +17,8 @@ import {
 
 export async function getMessagesId(req: Request, res: Response) {
     let conversationId: any = req.query.conversationId;
-    let operatorId: any = req.query.operatorId
     try {
-        const dataConversation: any = await getDataConversation(conversationId, operatorId);
+        const dataConversation: any = await getDataConversation(conversationId);
 
         if (dataConversation) {
 
@@ -73,9 +72,7 @@ export async function obterDadosProtocolos(req: any, res: any) {
     }
 
 
-    const dataProtocolos = await collectionProtocolos.find({
-        status: "A",
-    }).toArray();
+    const dataProtocolos = await collectionProtocolos.find(search).toArray();
 
     const resultados: any[] = [];
 
@@ -133,7 +130,7 @@ function getDataMessages(conversationId: string) {
 }
 
 
-function getDataConversation(conversationId: string, operatorId: number): Promise < any > {
+function getDataConversation(conversationId: string): Promise < any > {
     return new Promise(async (resolve, reject) => {
         try {
             const db = await getClient();
