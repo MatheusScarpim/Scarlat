@@ -82,11 +82,16 @@ async function addMessageUser(message: any, to: string, read: boolean): Promise 
 
     try {
         const dateMessage = new Date();
-        const dateMessageBRString = dateMessage.toLocaleString('pt-BR', {
-            timeZone: 'America/Sao_Paulo'
+
+        const dateMessageFormatted = dateMessage.toLocaleString('pt-BR', {
+            timeZone: 'UTC',
+            year: 'numeric',
+            month: '2-digit',
+            day: '2-digit',
+            hour: '2-digit',
+            minute: '2-digit',
+            second: '2-digit',
         });
-        const dateMessageBR = new Date(dateMessageBRString);
-        const dateMessageUTC = new Date(dateMessageBR.toISOString());
         const db = await getClient();
         const collection: any = db.collection('MENSAGENS');
         const uuid = new BSON.ObjectId();
@@ -96,9 +101,7 @@ async function addMessageUser(message: any, to: string, read: boolean): Promise 
             _id: uuid,
             conversationId: new BSON.ObjectId(message.conversationId),
             type: message.type,
-            dateMessage: dateMessageUTC.toLocaleString('pt-BR', {
-                timeZone: 'UTC'
-            }),
+            dateMessage: dateMessageFormatted,
             message: message.message,
             read: read,
             to: to,
@@ -136,12 +139,17 @@ async function updateName(conversationId: ObjectId, name: string, db: any) {
 async function createConversationId(message: Message): Promise < any > {
     return new Promise(async (resolve, reject) => {
         try {
-            const dateMessage = new Date();
-            const dateMessageBRString = dateMessage.toLocaleString('pt-BR', {
-                timeZone: 'America/Sao_Paulo'
+            const dateMessage = new Date(); // Substitua isso pela sua data original
+
+            const dateMessageFormatted = dateMessage.toLocaleString('pt-BR', {
+                timeZone: 'UTC',
+                year: 'numeric',
+                month: '2-digit',
+                day: '2-digit',
+                hour: '2-digit',
+                minute: '2-digit',
+                second: '2-digit',
             });
-            const dateMessageBR = new Date(dateMessageBRString);
-            const dateMessageUTC = new Date(dateMessageBR.toISOString());
             const db = await getClient();
             const collection: any = db.collection('PROTOCOLOS');
             const uuid = new BSON.ObjectId()
@@ -149,9 +157,7 @@ async function createConversationId(message: Message): Promise < any > {
             const data = {
                 _id: uuid,
                 identifier: message.identifier,
-                firstContact: dateMessageUTC.toLocaleString('pt-BR', {
-                    timeZone: 'UTC'
-                }),
+                firstContact: dateMessageFormatted,
                 name: message.name,
                 operatorId: message.operatorId || null,
                 status: "A",
@@ -332,12 +338,17 @@ export async function updateReading(idMessage: string): Promise < any > {
 
 export async function createConversation(params: any) {
     return new Promise(async (resolve, reject) => {
-        const dateMessage = new Date();
-        const dateMessageBRString = dateMessage.toLocaleString('pt-BR', {
-            timeZone: 'America/Sao_Paulo'
+        const dateMessage = new Date(); // Substitua isso pela sua data original
+
+        const dateMessageFormatted = dateMessage.toLocaleString('pt-BR', {
+            timeZone: 'UTC',
+            year: 'numeric',
+            month: '2-digit',
+            day: '2-digit',
+            hour: '2-digit',
+            minute: '2-digit',
+            second: '2-digit',
         });
-        const dateMessageBR = new Date(dateMessageBRString);
-        const dateMessageUTC = new Date(dateMessageBR.toISOString());
         let conversationIdExisting = await getUUID(params.identifier, params.provider)
         if (conversationIdExisting) {
             return resolve({
@@ -353,9 +364,7 @@ export async function createConversation(params: any) {
             let data: Message = {
                 _id: uuid,
                 identifier: params.identifier,
-                firstContact: dateMessageUTC.toLocaleString('pt-BR', {
-                    timeZone: 'UTC'
-                }),
+                firstContact: dateMessageFormatted,
                 name: params.name,
                 operatorId: params.operatorId,
                 status: "A",
