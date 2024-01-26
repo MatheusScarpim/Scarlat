@@ -45,6 +45,7 @@ async function getBase64Image(client, from) {
     })
 }
 
+const axios = require("axios")
 async function imageUrlToBase64(url) {
     try {
         const response = await axios.get(url, {
