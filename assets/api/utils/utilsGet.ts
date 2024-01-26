@@ -68,7 +68,7 @@ export async function obterDadosProtocolos(req: any, res: any) {
         status: "A",
     }
     if (req.query.operatorId !== undefined && req.query.operatorId !== null) {
-        search.operatorId = req.query.operatorId;
+        search.operatorId = parseInt(req.query.operatorId);
     }
 
 
