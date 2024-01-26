@@ -68,6 +68,10 @@ export async function obterDadosProtocolos(req: any, res: any) {
     let search: any = {
         status: "A",
     }
+    if (req.query.operatorId !== undefined && req.query.operatorId !== null) {
+        search.operatorId = req.query.operatorId;
+    }
+
 
     const dataProtocolos = await collectionProtocolos.find({
         status: "A",
@@ -138,10 +142,6 @@ function getDataConversation(conversationId: string, operatorId: number): Promis
             let search: any = {
                 _id: new BSON.ObjectId(conversationId)
             };
-
-            if (operatorId !== undefined && operatorId !== null) {
-                search.operatorId = operatorId;
-            }
 
             const data = await collection.findOne(search);
 
