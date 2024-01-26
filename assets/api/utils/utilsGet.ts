@@ -17,8 +17,9 @@ import {
 
 export async function getMessagesId(req: Request, res: Response) {
     let conversationId: any = req.query.conversationId;
+    let operatorId: any = req.query.operatorId
     try {
-        const dataConversation: any = await getDataConversation(conversationId);
+        const dataConversation: any = await getDataConversation(conversationId, operatorId);
 
         if (dataConversation) {
 
@@ -64,6 +65,9 @@ export async function getMessagesId(req: Request, res: Response) {
 export async function obterDadosProtocolos(req: any, res: any) {
     const db = await getClient();
     const collectionProtocolos = db.collection('PROTOCOLOS');
+    let search: any = {
+        status: "A",
+    }
 
     const dataProtocolos = await collectionProtocolos.find({
         status: "A",
@@ -108,29 +112,6 @@ function contarNaoLidas(array: any) {
 }
 
 
-async function getDataMessagesConversation(conversationId: any) {
-    return new Promise(async (resolve, reject) => {
-        try {
-            const db = await getClient();
-            const collectionMensagem = db.collection('MENSAGENS');
-
-            let mensagens: any = await collectionMensagem.find({
-                conversationId: conversationId
-            }).toArray();
-            mensagens = mensagens.map((obj: any) => ({
-                ...obj,
-                _id: obj._id.toHexString(),
-                conversationId: obj.conversationId.toHexString()
-
-            }));
-
-            resolve(mensagens);
-        } catch (error) {
-            reject(error);
-        }
-    });
-}
-
 function getDataMessages(conversationId: string) {
     return new Promise(async (resolve, reject) => {
         try {
@@ -147,20 +128,25 @@ function getDataMessages(conversationId: string) {
 }
 
 
-function getDataConversation(conversationId: string): Promise < any > {
+function getDataConversation(conversationId: string, operatorId: number): Promise < any > {
     return new Promise(async (resolve, reject) => {
         try {
             const db = await getClient();
             const collection = db.collection('PROTOCOLOS');
 
-
-            const data = await collection.findOne({
+            let search: any = {
                 _id: new BSON.ObjectId(conversationId)
-            });
+            };
+
+            if (operatorId !== undefined && operatorId !== null) {
+                search.operatorId = operatorId;
+            }
+
+            const data = await collection.findOne(search);
 
             resolve(data);
         } catch (error) {
-            console.error(error)
+            console.error(error);
             reject(error);
         }
     });

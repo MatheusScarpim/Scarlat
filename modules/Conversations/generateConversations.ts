@@ -79,23 +79,35 @@ async function generateId(message: Message, to: string): Promise < Message > {
     });
 }
 async function addMessageUser(message: any, to: string, read: boolean): Promise < any > {
+
     try {
         const dateMessage = new Date();
+        const dateMessageBRString = dateMessage.toLocaleString('pt-BR', {
+            timeZone: 'America/Sao_Paulo'
+        });
+        const dateMessageBR = new Date(dateMessageBRString);
+        const dateMessageUTC = new Date(dateMessageBR.toISOString());
         const db = await getClient();
         const collection: any = db.collection('MENSAGENS');
         const uuid = new BSON.ObjectId();
+        let conversationId = new BSON.ObjectId(message.conversationId)
 
         const data = {
             _id: uuid,
             conversationId: new BSON.ObjectId(message.conversationId),
             type: message.type,
-            dateMessage: dateMessage.toLocaleString('pt-BR', options),
+            dateMessage: dateMessageUTC.toLocaleString('pt-BR', {
+                timeZone: 'UTC'
+            }),
             message: message.message,
             read: read,
             to: to,
         };
 
         await collection.insertOne(data);
+
+        await updateName(conversationId, message.name, db)
+
 
         return {
             "_id": uuid.toHexString(),
@@ -107,12 +119,29 @@ async function addMessageUser(message: any, to: string, read: boolean): Promise 
     }
 }
 
+async function updateName(conversationId: ObjectId, name: string, db: any) {
+    const filter = {
+        _id: conversationId
+    };
+    const collection: any = db.collection('PROTOCOLOS');
+    await collection.updateMany(filter, {
+        $set: {
+            name: name
+        }
+    });
+}
+
 
 
 async function createConversationId(message: Message): Promise < any > {
     return new Promise(async (resolve, reject) => {
         try {
-            let dateMessage = new Date()
+            const dateMessage = new Date();
+            const dateMessageBRString = dateMessage.toLocaleString('pt-BR', {
+                timeZone: 'America/Sao_Paulo'
+            });
+            const dateMessageBR = new Date(dateMessageBRString);
+            const dateMessageUTC = new Date(dateMessageBR.toISOString());
             const db = await getClient();
             const collection: any = db.collection('PROTOCOLOS');
             const uuid = new BSON.ObjectId()
@@ -120,7 +149,9 @@ async function createConversationId(message: Message): Promise < any > {
             const data = {
                 _id: uuid,
                 identifier: message.identifier,
-                firstContact: dateMessage.toLocaleString('pt-BR', options),
+                firstContact: dateMessageUTC.toLocaleString('pt-BR', {
+                    timeZone: 'UTC'
+                }),
                 name: message.name,
                 operatorId: message.operatorId || null,
                 status: "A",
@@ -302,6 +333,11 @@ export async function updateReading(idMessage: string): Promise < any > {
 export async function createConversation(params: any) {
     return new Promise(async (resolve, reject) => {
         const dateMessage = new Date();
+        const dateMessageBRString = dateMessage.toLocaleString('pt-BR', {
+            timeZone: 'America/Sao_Paulo'
+        });
+        const dateMessageBR = new Date(dateMessageBRString);
+        const dateMessageUTC = new Date(dateMessageBR.toISOString());
         let conversationIdExisting = await getUUID(params.identifier, params.provider)
         if (conversationIdExisting) {
             return resolve({
@@ -317,7 +353,9 @@ export async function createConversation(params: any) {
             let data: Message = {
                 _id: uuid,
                 identifier: params.identifier,
-                firstContact: dateMessage.toLocaleString('pt-BR', options),
+                firstContact: dateMessageUTC.toLocaleString('pt-BR', {
+                    timeZone: 'UTC'
+                }),
                 name: params.name,
                 operatorId: params.operatorId,
                 status: "A",
@@ -343,33 +381,37 @@ export async function createConversation(params: any) {
 export async function updateStatusConversation(params: any) {
     return new Promise(async (resolve, reject) => {
         let conversationId = params.conversationId;
-        let status = params.status
+        let status = params.status || "A";
+        let operatorId = params.operatorId; // Assuming operatorId is passed in params
+
         if (!await getExisting(conversationId)) {
             return resolve({
                 "status": "error",
-                "message": "Not conversationId existing or its is finished"
-            })
-        } else if (!await getProviderResp(params) || !params.operatorId) {
-            return resolve({
-                "status": "error",
-                "message": "You are not responsible"
-            })
+                "message": "Not conversationId existing or it is finished"
+            });
         }
+
         try {
             const db = await getClient();
             const collection = db.collection('PROTOCOLOS');
 
-            await collection.updateMany({
-                _id: new BSON.ObjectId(conversationId)
-            }, {
+            const updateObject: any = {
                 $set: {
                     status: status
                 }
-            });
+            };
+
+            if (operatorId !== undefined && operatorId !== null) {
+                updateObject.$set.operatorId = operatorId;
+            }
+
+            await collection.updateMany({
+                _id: new BSON.ObjectId(conversationId)
+            }, updateObject);
 
             resolve({
                 status: "success"
-            })
+            });
 
         } catch (error) {
             console.error("Error updateStatusConversation ", error);
@@ -379,6 +421,7 @@ export async function updateStatusConversation(params: any) {
         }
     });
 }
+
 
 
 export {

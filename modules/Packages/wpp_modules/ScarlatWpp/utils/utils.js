@@ -31,4 +31,29 @@ async function getType(client, message) {
     }
 }
 
+
+async function getBase64Image(client) {
+    return new Promise(async (resolve, reject) => {
+        const Foto = await client.getProfilePicFromServer(client.from);
+        if (Foto.tag != null) {
+            resolve(await imageUrlToBase64(Foto.imgFull))
+        } else {
+            resolve(null);
+        }
+    })
+}
+
+async function imageUrlToBase64(url) {
+    try {
+        const response = await axios.get(url, {
+            responseType: 'arraybuffer'
+        });
+        const buffer = Buffer.from(response.data, 'binary');
+        const base64String = buffer.toString('base64');
+        return base64String;
+    } catch (error) {
+        throw new Error('Erro ao converter imagem para base64: ' + error.message);
+    }
+}
 module.exports.getType = getType;
+module.exports.getBase64Image = getBase64Image
