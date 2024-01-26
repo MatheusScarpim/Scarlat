@@ -102,7 +102,7 @@ async function addMessageUser(message: any, to: string, read: boolean): Promise 
             _id: uuid,
             conversationId: new BSON.ObjectId(message.conversationId),
             type: message.type,
-            dateMessage: dateMessageFormatted,
+            dateMessage: dateMessage.toISOString(),
             message: message.message,
             read: read,
             to: to,
@@ -159,7 +159,7 @@ async function createConversationId(message: Message): Promise < any > {
             const data = {
                 _id: uuid,
                 identifier: message.identifier,
-                firstContact: dateMessageFormatted,
+                firstContact: dateMessage.toISOString(),
                 name: message.name,
                 operatorId: message.operatorId || null,
                 status: "A",
@@ -367,7 +367,7 @@ export async function createConversation(params: any) {
             let data: Message = {
                 _id: uuid,
                 identifier: params.identifier,
-                firstContact: dateMessageFormatted,
+                firstContact: dateMessage.toISOString(),
                 name: params.name,
                 operatorId: params.operatorId,
                 status: "A",
