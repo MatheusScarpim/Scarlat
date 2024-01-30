@@ -8,10 +8,11 @@ async function getType(client, message) {
     } else if (type == "document") {
         let base = await client.downloadMedia(message.id)
         let baseFormat = base.split("base64,")
-        console.log(baseFormat[0])
+        console.log(baseFormat[0].replace("data:", "").replace(";", ""))
         return {
             fileName: message.fileName,
             fileBase: baseFormat[1],
+            mimeType: baseFormat[0].replace("data:", "").replace(";", "")
         }
     } else if (type == "image") {
         let base = await client.downloadMedia(message.id);
