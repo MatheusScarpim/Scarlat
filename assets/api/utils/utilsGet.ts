@@ -33,6 +33,7 @@ export async function getMessagesId(req: Request, res: Response) {
                     name: dataConversation.name,
                     operatorId: dataConversation.operatorId,
                     status: dataConversation.status,
+                    dateCreated : dataConversation.dateCreated,
                     messages: dadosMensagens
                 };
 
@@ -89,7 +90,8 @@ export async function obterDadosProtocolos(req: any, res: any) {
                 name: elemento.name,
                 status: elemento.status,
                 countNotReads: contarNaoLidas(messages),
-                photo: elemento.photo || null
+                photo: elemento.photo || null,
+                dateCreated: elemento.dateCreated 
             };
 
             resultados.push(resultado);
