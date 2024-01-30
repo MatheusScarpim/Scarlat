@@ -35,6 +35,7 @@ interface Message {
     message ? : string;
     lastMessage ? : any;
     photo ? : any;
+    dateCreated ? : any;
 }
 
 
@@ -115,6 +116,7 @@ async function addMessageUser(message: any, to: string, read: boolean): Promise 
 
         return {
             "_id": uuid.toHexString(),
+            "conversationId" : message.conversationId,
             "status": "success"
         };
     } catch (error) {
@@ -164,7 +166,8 @@ async function createConversationId(message: Message): Promise < any > {
                 operatorId: message.operatorId || null,
                 status: "A",
                 provider: message.provider,
-                photo: message.photo || null
+                photo: message.photo || null,
+                dateCreated : dateMessage.toISOString(),
             };
 
             await collection.insertOne(data);
@@ -371,7 +374,8 @@ export async function createConversation(params: any) {
                 name: params.name,
                 operatorId: params.operatorId,
                 status: "A",
-                provider: params.provider
+                provider: params.provider,
+                dateCreated: dateMessage.toISOString(),
             }
 
             await collection.insertOne(data);

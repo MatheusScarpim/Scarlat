@@ -8,6 +8,7 @@ async function getType(client, message) {
     } else if (type == "document") {
         let base = await client.downloadMedia(message.id)
         let baseFormat = base.split("base64,")[1]
+        console.log(baseFormat)
         return {
             fileName: message.fileName,
             fileBase: baseFormat,
