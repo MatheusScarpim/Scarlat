@@ -71,7 +71,7 @@ async function generateId(message: Message, to: string): Promise < Message > {
             }
             let messageusr = await addMessageUser(message, to, false);
 
-            message = messageusr.message
+            message = messageusr
 
             resolve(message);
         } catch (error) {
@@ -107,8 +107,8 @@ async function addMessageUser(message: any, to: string, read: boolean): Promise 
 
         return {
             "_id": uuid.toHexString(),
-            "conversationId" : message.conversationId,
-            "message" : data.message,
+            "conversationId": message.conversationId,
+            "message": data.message,
             "status": "success"
         };
     } catch (error) {
@@ -150,7 +150,7 @@ async function createConversationId(message: Message): Promise < any > {
                 status: "A",
                 provider: message.provider,
                 photo: message.photo || null,
-                dateCreated : dateMessage.toISOString(),
+                dateCreated: dateMessage.toISOString(),
             };
 
             await collection.insertOne(data);
