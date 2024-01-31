@@ -100,6 +100,16 @@ async function addMessageUser(message: any, to: string, read: boolean): Promise 
             to: to,
         };
 
+        const dataretorno = {
+            _id: uuid.toHexString(),
+            conversationId: message.conversationId,
+            type: message.type,
+            dateMessage: dateMessage.toISOString(),
+            message: message.message,
+            read: read,
+            to: to,
+        };
+
         await collection.insertOne(data);
 
         await updateName(conversationId, message.name, db, message.photo)
@@ -108,7 +118,7 @@ async function addMessageUser(message: any, to: string, read: boolean): Promise 
         return {
             "_id": uuid.toHexString(),
             "conversationId": message.conversationId,
-            "message": data,
+            "message": dataretorno,
             "status": "success"
         };
     } catch (error) {
