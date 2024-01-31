@@ -15,13 +15,13 @@ import {
 const apiUrl = process.env.LINK_WEBHOOK_MENSAGENS;
 
 function dispararHook(params: any) {
-    let urlMod = `https://a184-2804-4ec-14e3-9200-b081-dddf-78de-694a.ngrok-free.app/api/v1/webhooks/atendimento/mensagens`
+    let urlMod = `https://nxbr-demonstrativo-api.nexum.com.br/api/v1/webhooks/atendimento/mensagens`
     console.log(params)
-    axios.post(urlMod, params,{
-        headers: {
-            'Content-Type': 'application/json'
-        }
-    })
+    axios.post(urlMod, params, {
+            headers: {
+                'Content-Type': 'application/json'
+            }
+        })
         .then((response: any) => {})
         .catch((error: any) => {});
 }
@@ -29,31 +29,12 @@ function dispararHook(params: any) {
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-const apiProtocolos = "https://a184-2804-4ec-14e3-9200-b081-dddf-78de-694a.ngrok-free.app/api/v1/webhooks/atendimento/conversas"
+const apiProtocolos = "https://nxbr-demonstrativo-api.nexum.com.br/api/v1/webhooks/atendimento/conversas"
 
 async function dispararProtocolos() {
     let retorno = await obterDadosProtocolos()
     console.log(retorno)
-    
+
     axios.post(apiProtocolos, retorno)
         .then((response: any) => {})
         .catch((error: any) => {});

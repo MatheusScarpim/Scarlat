@@ -33,7 +33,7 @@ export async function getMessagesId(req: Request, res: Response) {
                     name: dataConversation.name,
                     operatorId: dataConversation.operatorId,
                     status: dataConversation.status,
-                    dateCreated : dataConversation.dateCreated,
+                    dateCreated: dataConversation.dateCreated,
                     messages: dadosMensagens
                 };
 
@@ -65,16 +65,13 @@ export async function getMessagesId(req: Request, res: Response) {
 export async function obterDadosProtocolos(req: any, res: any) {
     const db = await getClient();
     const collectionProtocolos = db.collection('PROTOCOLOS');
-    let search: any = {
-    }
+    let search: any = {}
     if (req.query.operatorId !== undefined && req.query.operatorId !== null) {
         search.operatorId = parseInt(req.query.operatorId);
     }
     if (req.query.status !== undefined && req.query.status !== null) {
         search.status = (req.query.status).toString();
-    }
-    else
-    {
+    } else {
         search.status = "A";
     }
 
@@ -97,7 +94,7 @@ export async function obterDadosProtocolos(req: any, res: any) {
                 status: elemento.status,
                 countNotReads: contarNaoLidas(messages),
                 photo: elemento.photo || null,
-                dateCreated: elemento.dateCreated 
+                dateCreated: elemento.dateCreated
             };
 
             resultados.push(resultado);
