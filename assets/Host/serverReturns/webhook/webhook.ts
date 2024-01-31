@@ -32,9 +32,9 @@ async function dispararProtocolos() {
         .catch((error: any) => {});
 }
 
-setInterval(() => {
-    dispararProtocolos()
-}, 3000);
+// setInterval(() => {
+//     dispararProtocolos()
+// }, 3000);
 
 
 async function obterDadosProtocolos() {
