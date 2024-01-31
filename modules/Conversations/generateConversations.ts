@@ -59,7 +59,7 @@ export function conversatioExisting(message: Message, to: string): Promise < any
     });
 }
 
-async function generateId(message: Message, to: string): Promise < string > {
+async function generateId(message: Message, to: string): Promise < Message > {
     return new Promise(async (resolve, reject) => {
         try {
             const existingId = await getUUID(message.identifier, message.provider);
@@ -73,7 +73,7 @@ async function generateId(message: Message, to: string): Promise < string > {
 
             message = messageusr.message
 
-            resolve(JSON.stringify(message));
+            resolve(message);
         } catch (error) {
             console.error("Error in generateId function:", error);
             reject(error);
