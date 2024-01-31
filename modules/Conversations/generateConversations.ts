@@ -71,7 +71,7 @@ async function generateId(message: Message, to: string): Promise < Message > {
             }
             let messageusr = await addMessageUser(message, to, false);
 
-            message._id = messageusr._id
+            message = messageusr.message
 
             resolve(message);
         } catch (error) {
@@ -85,15 +85,6 @@ async function addMessageUser(message: any, to: string, read: boolean): Promise 
     try {
         const dateMessage = new Date();
 
-        const dateMessageFormatted = dateMessage.toLocaleString('pt-BR', {
-            timeZone: 'UTC',
-            year: 'numeric',
-            month: '2-digit',
-            day: '2-digit',
-            hour: '2-digit',
-            minute: '2-digit',
-            second: '2-digit',
-        });
         const db = await getClient();
         const collection: any = db.collection('MENSAGENS');
         const uuid = new BSON.ObjectId();
@@ -117,6 +108,7 @@ async function addMessageUser(message: any, to: string, read: boolean): Promise 
         return {
             "_id": uuid.toHexString(),
             "conversationId" : message.conversationId,
+            "message" : data.message,
             "status": "success"
         };
     } catch (error) {
@@ -145,15 +137,6 @@ async function createConversationId(message: Message): Promise < any > {
         try {
             const dateMessage = new Date(); // Substitua isso pela sua data original
 
-            const dateMessageFormatted = dateMessage.toLocaleString('pt-BR', {
-                timeZone: 'UTC',
-                year: 'numeric',
-                month: '2-digit',
-                day: '2-digit',
-                hour: '2-digit',
-                minute: '2-digit',
-                second: '2-digit',
-            });
             const db = await getClient();
             const collection: any = db.collection('PROTOCOLOS');
             const uuid = new BSON.ObjectId()
@@ -346,15 +329,6 @@ export async function createConversation(params: any) {
     return new Promise(async (resolve, reject) => {
         const dateMessage = new Date(); // Substitua isso pela sua data original
 
-        const dateMessageFormatted = dateMessage.toLocaleString('pt-BR', {
-            timeZone: 'UTC',
-            year: 'numeric',
-            month: '2-digit',
-            day: '2-digit',
-            hour: '2-digit',
-            minute: '2-digit',
-            second: '2-digit',
-        });
         let conversationIdExisting = await getUUID(params.identifier, params.provider)
         if (conversationIdExisting) {
             return resolve({
