@@ -112,7 +112,10 @@ async function addMessageUser(message: any, to: string, read: boolean): Promise 
 
         await collection.insertOne(data);
 
-        await updateName(conversationId, message.name, db, message.photo)
+        if(to == "U")
+        {
+            await updateName(conversationId, message.name, db, message.photo)
+        }
 
 
         return {
