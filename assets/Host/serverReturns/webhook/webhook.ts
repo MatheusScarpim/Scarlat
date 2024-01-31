@@ -17,7 +17,11 @@ const apiUrl = process.env.LINK_WEBHOOK_MENSAGENS;
 function dispararHook(params: any) {
     let urlMod = `https://a184-2804-4ec-14e3-9200-b081-dddf-78de-694a.ngrok-free.app/api/v1/webhooks/atendimento/mensagens`
     console.log(params)
-    axios.post(urlMod, params)
+    axios.post(urlMod, params,{
+        headers: {
+            'Content-Type': 'application/json'
+        }
+    })
         .then((response: any) => {})
         .catch((error: any) => {});
 }
