@@ -66,10 +66,16 @@ export async function obterDadosProtocolos(req: any, res: any) {
     const db = await getClient();
     const collectionProtocolos = db.collection('PROTOCOLOS');
     let search: any = {
-        status: "A",
     }
     if (req.query.operatorId !== undefined && req.query.operatorId !== null) {
         search.operatorId = parseInt(req.query.operatorId);
+    }
+    if (req.query.status !== undefined && req.query.status !== null) {
+        search.status = req.query.status;
+    }
+    else
+    {
+        search.status = "A";
     }
 
 
